@@ -8,6 +8,44 @@ class MarsRover {
 		this.buildMoveRules();
 	}
 
+	buildActionRules() {
+		this.actionRules = [
+			{ status: Status.NotLoading, rule: command => command.match(/^[0-9]+\s[0-9]+$/), exe: command => this.initArea(command) },
+			{ status: Status.Loading, rule: command => command.match(/^[0-9]+\s[0-9]+\s[NSWE]$/), exe: command => this.initPosition(command) },
+			{ status: Status.Move, rule: command => command.match(/^[flbr]+$/), exe: command => this.move(command) },
+			{ status: Status.Over, rule: () => true, exe: () => { throw new Error('Out of range') } },
+			{ status: this.position.status, rule: command => !command.match(/^[0-9]+\s[0-9]+$/) && !command.match(/^[0-9]+\s[0-9]+\s[NSWE]$/) && !command.match(/^[flbr]+$/), exe: () => { throw new Error('Invalid commands') } }
+		];
+	}
+
+	buildMoveRules() {
+		this.moveRules = [
+			{ direction: Direction.N, move: 'f', exe: () => this.updatePosition(0, 1) },
+			{ direction: Direction.S, move: 'f', exe: () => this.updatePosition(0, -1) },
+			{ direction: Direction.E, move: 'f', exe: () => this.updatePosition(1, 0) },
+			{ direction: Direction.W, move: 'f', exe: () => this.updatePosition(-1, 0) },
+			{ direction: Direction.N, move: 'b', exe: () => this.updatePosition(0, -1) },
+			{ direction: Direction.S, move: 'b', exe: () => this.updatePosition(0, 1) },
+			{ direction: Direction.E, move: 'b', exe: () => this.updatePosition(-1, 0) },
+			{ direction: Direction.W, move: 'b', exe: () => this.updatePosition(1, 0) },
+
+			{ direction: Direction.N, move: 'l', exe: () => this.updatePosition(0, 0, Direction.W) },
+			{ direction: Direction.N, move: 'r', exe: () => this.updatePosition(0, 0, Direction.E) },
+			{ direction: Direction.W, move: 'l', exe: () => this.updatePosition(0, 0, Direction.S) },
+			{ direction: Direction.W, move: 'r', exe: () => this.updatePosition(0, 0, Direction.N) },
+			{ direction: Direction.S, move: 'l', exe: () => this.updatePosition(0, 0, Direction.E) },
+			{ direction: Direction.S, move: 'r', exe: () => this.updatePosition(0, 0, Direction.W) },
+			{ direction: Direction.E, move: 'l', exe: () => this.updatePosition(0, 0, Direction.N) },
+			{ direction: Direction.E, move: 'r', exe: () => this.updatePosition(0, 0, Direction.S) }
+		];
+	}
+
+	updatePosition(x, y, d) {
+		if (x) { this.position.x = (parseInt(this.position.x) + x).toString(); }
+		if (y) { this.position.y = (parseInt(this.position.y) + y).toString(); }
+		if (d) { this.position.d = d; }
+	}
+
 	initArea(command) {
 		let areaDatas = command.trim().split(/\s/);
 		this.area = { width: areaDatas[0], height: areaDatas[1] };
@@ -52,44 +90,6 @@ class MarsRover {
 		if (!this.position.x || !this.position.y || !this.position.d) throw new Error('Initialization failed');
 
 		return `${this.position.x} ${this.position.y} ${this.position.d}`;
-	}
-
-	buildActionRules() {
-		this.actionRules = [
-			{ status: Status.NotLoading, rule: command => command.match(/^[0-9]+\s[0-9]+$/), exe: command => this.initArea(command) },
-			{ status: Status.Loading, rule: command => command.match(/^[0-9]+\s[0-9]+\s[NSWE]$/), exe: command => this.initPosition(command) },
-			{ status: Status.Move, rule: command => command.match(/^[flbr]+$/), exe: command => this.move(command) },
-			{ status: Status.Over, rule: () => true, exe: () => { throw new Error('Out of range') } },
-			{ status: this.position.status, rule: command => !command.match(/^[0-9]+\s[0-9]+$/) && !command.match(/^[0-9]+\s[0-9]+\s[NSWE]$/) && !command.match(/^[flbr]+$/), exe: () => { throw new Error('Invalid commands') } }
-		];
-	}
-
-	buildMoveRules() {
-		this.moveRules = [
-			{ direction: Direction.N, move: 'f', exe: () => this.updatePosition(0, 1) },
-			{ direction: Direction.S, move: 'f', exe: () => this.updatePosition(0, -1) },
-			{ direction: Direction.E, move: 'f', exe: () => this.updatePosition(1, 0) },
-			{ direction: Direction.W, move: 'f', exe: () => this.updatePosition(-1, 0) },
-			{ direction: Direction.N, move: 'b', exe: () => this.updatePosition(0, -1) },
-			{ direction: Direction.S, move: 'b', exe: () => this.updatePosition(0, 1) },
-			{ direction: Direction.E, move: 'b', exe: () => this.updatePosition(-1, 0) },
-			{ direction: Direction.W, move: 'b', exe: () => this.updatePosition(1, 0) },
-
-			{ direction: Direction.N, move: 'l', exe: () => this.updatePosition(0, 0, Direction.W) },
-			{ direction: Direction.N, move: 'r', exe: () => this.updatePosition(0, 0, Direction.E) },
-			{ direction: Direction.W, move: 'l', exe: () => this.updatePosition(0, 0, Direction.S) },
-			{ direction: Direction.W, move: 'r', exe: () => this.updatePosition(0, 0, Direction.N) },
-			{ direction: Direction.S, move: 'l', exe: () => this.updatePosition(0, 0, Direction.E) },
-			{ direction: Direction.S, move: 'r', exe: () => this.updatePosition(0, 0, Direction.W) },
-			{ direction: Direction.E, move: 'l', exe: () => this.updatePosition(0, 0, Direction.N) },
-			{ direction: Direction.E, move: 'r', exe: () => this.updatePosition(0, 0, Direction.S) }
-		];
-	}
-
-	updatePosition(x, y, d) {
-		if (x) { this.position.x = (parseInt(this.position.x) + x).toString(); }
-		if (y) { this.position.y = (parseInt(this.position.y) + y).toString(); }
-		if (d) { this.position.d = d; }
 	}
 }
 
