@@ -1,0 +1,14 @@
+{
+	"name": "Args",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"start": "node ./src/app.js",
+		"test": "mocha --exit"
+	},
+	"dependencies": {
+		"chai": "^4.2.0",
+		"lodash": "^4.17.15"
+	}
+}
