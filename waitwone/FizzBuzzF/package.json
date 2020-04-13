@@ -1,0 +1,9 @@
+{
+	"scripts": {
+		"start": "node ./src/App.js",
+		"test": "mocha  --exit"
+	},
+	"dependencies": {
+		"chai": "^4.2.0"
+	}
+}

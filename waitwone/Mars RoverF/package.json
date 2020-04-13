@@ -1,0 +1,10 @@
+{
+	"scripts": {
+		"test": "mocha  --exit"
+	},
+	"dependencies": {
+		"chai": "^4.2.0",
+		"lodash": "^4.17.15",
+		"node-boolify": "^1.0.6"
+	}
+}
