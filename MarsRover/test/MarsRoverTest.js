@@ -24,7 +24,7 @@ describe('MarsRoverTest', () => {
 		})
 	});
 
-	it('out of rang error', () => {
+	it('out of range error', () => {
 		let marsRover = new MarsRover();
 		marsRover.execute('10 10\n0 0 N\nff').should.eq('0 2 N');
 		(() => marsRover.execute('fffff')).should.throw('Out of range');

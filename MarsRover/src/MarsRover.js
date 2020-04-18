@@ -2,7 +2,7 @@ const _ = require('lodash');
 
 class MarsRover {
 	constructor() {
-		this.position = { status: Status.NotLoading }, this.area = { width: 0, height: 0 };
+		this.position = { status: Status.Unknown }, this.area = { width: 0, height: 0 };
 
 		this.buildActionRules();
 		this.buildMoveRules();
@@ -10,8 +10,8 @@ class MarsRover {
 
 	buildActionRules() {
 		this.actionRules = [
-			{ status: Status.NotLoading, rule: command => command.match(/^[0-9]+\s[0-9]+$/), exe: command => this.initArea(command) },
-			{ status: Status.Loading, rule: command => command.match(/^[0-9]+\s[0-9]+\s[NSWE]$/), exe: command => this.initPosition(command) },
+			{ status: Status.Unknown, rule: command => command.match(/^[0-9]+\s[0-9]+$/), exe: command => this.initArea(command) },
+			{ status: Status.Landing, rule: command => command.match(/^[0-9]+\s[0-9]+\s[NSWE]$/), exe: command => this.initPosition(command) },
 			{ status: Status.Move, rule: command => command.match(/^[flbr]+$/), exe: command => this.move(command) },
 			{ status: Status.Over, rule: () => true, exe: () => { throw new Error('Out of range') } },
 			{ status: this.position.status, rule: command => !command.match(/^[0-9]+\s[0-9]+$/) && !command.match(/^[0-9]+\s[0-9]+\s[NSWE]$/) && !command.match(/^[flbr]+$/), exe: () => { throw new Error('Invalid commands') } }
@@ -49,7 +49,7 @@ class MarsRover {
 	initArea(command) {
 		let areaDatas = command.trim().split(/\s/);
 		this.area = { width: areaDatas[0], height: areaDatas[1] };
-		this.position.status = Status.Loading;
+		this.position.status = Status.Landing;
 	}
 
 	initPosition(command) {
@@ -94,6 +94,6 @@ class MarsRover {
 }
 
 const Direction = { N: 'N', E: 'E', S: 'S', W: 'W' };
-const Status = { NotLoading: "notLoading", Loading: 'loading', Move: 'move', Over: 'over' };
+const Status = { Unknown: "unknown", Landing: 'landing', Move: 'move', Over: 'over' };
 
 module.exports = MarsRover;
