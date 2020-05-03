@@ -1,8 +1,10 @@
 const should = require('chai').should();
 const _ = require('lodash');
+const sinon = require('sinon');
 const MarsRover = require('../src/MarsRover');
 
 describe('MarsRoverTest', () => {
+	sinon.fake();
 	it('usage', () => {
 		let marsRover = new MarsRover();
 		marsRover.execute('10 10\n0 0 N\nfl').should.eq('0 1 W');

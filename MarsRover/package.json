@@ -4,11 +4,14 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
-		"test": "mocha"
+		"test": "mocha",
+		"coverage": "nyc --reporter=html --reporter=text-summary mocha"
 	},
 	"dependencies": {
 		"chai": "^4.2.0",
 		"lodash": "^4.17.15",
-		"mocha": "^7.1.1"
+		"mocha": "^7.1.1",
+		"nyc": "^15.0.1",
+		"sinon": "^9.0.2"
 	}
 }
